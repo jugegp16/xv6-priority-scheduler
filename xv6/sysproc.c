@@ -93,20 +93,16 @@ sys_uptime(void)
 int
 sys_setpriority(void)
 {
-  int oldPriotity = myproc()->priority;
   int newPriority;
-  // CHECK BOUNDS 0:200
-  if(argint(0, &newPriority) <= 0 || argint(0, &newPriority) > 200)
+  int oldPriotity = myproc()->priority;
+  if(argint(0, &newPriority) < 0)
+    return -1;
+  if(newPriority > 200)
     return -1;
 
-  cprintf("%d", oldPriotity);
-  cprintf("\n");
-  cprintf("%d", newPriority);
-  cprintf("\n");
+  myproc()->priority=newPriority;
 
-  myproc()->priority = newPriority;
-
-  if ( newPriority > oldPriotity){
+  if (newPriority > oldPriotity){
     yield();
   }
   return oldPriotity;
